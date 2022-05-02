@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
         playList = findViewById(R.id.lv_playList);
         // playList.setAdapter(new ArrayAdapter<String>(this,));
 
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         String url = "https://orangevalleycaa.org/api/music";
 
         // Request a JsonArray response from the provided URL.
@@ -54,6 +52,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Add the request to the RequestQueue.
-        queue.add(request);
+        RequestsSingleton.getInstance(this).addToRequestQueue(request);
     }
 }
