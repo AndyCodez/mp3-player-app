@@ -11,6 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SongDataService {
     Context context;
     public static final String URL = "https://orangevalleycaa.org/api/music";
@@ -20,24 +23,31 @@ public class SongDataService {
     }
 
     public interface VolleyResponseListener {
-        void onResponse(JSONObject response);
+        void onResponse(List response);
         void onErrorResponse(VolleyError error);
     }
 
-    public void getSong(VolleyResponseListener volleyResponseListener) {
-        final JSONObject[] song = new JSONObject[1];
-
+    public void fetchPlaylist(VolleyResponseListener volleyResponseListener) {
         // Request a JsonArray response from the provided URL.
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
-                try {
-                    song[0] = response.getJSONObject(0);
-                    volleyResponseListener.onResponse(song[0]);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                JSONObject songObject;
+                List<JSONObject> songs = new ArrayList<>();
+
+                for(int i=0; i <= response.length(); i++) {
+                    try {
+                        songObject = (JSONObject) response.get(i);
+                        songs.add(songObject);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
+
+                volleyResponseListener.onResponse(songs);
             }
         }, new Response.ErrorListener() {
             @Override

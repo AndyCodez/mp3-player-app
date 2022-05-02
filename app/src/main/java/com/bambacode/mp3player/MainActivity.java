@@ -2,12 +2,15 @@ package com.bambacode.mp3player;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ListView playList;
@@ -19,10 +22,11 @@ public class MainActivity extends AppCompatActivity {
         playList = findViewById(R.id.lv_playList);
 
         SongDataService songDataService = new SongDataService(this);
-        songDataService.getSong(new SongDataService.VolleyResponseListener() {
+        songDataService.fetchPlaylist(new SongDataService.VolleyResponseListener() {
             @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText(MainActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+            public void onResponse(List response) {
+                ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, response);
+                playList.setAdapter(arrayAdapter);
             }
 
             @Override
